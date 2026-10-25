@@ -176,7 +176,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 import {getAuth,onAuthStateChanged,signInWithPopup,GoogleAuthProvider,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,collection,doc,onSnapshot,setDoc,deleteDoc,addDoc,query,orderBy,updateDoc,increment,getDoc,writeBatch} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 /* ===== আপনার Firebase config: Firebase Console → Project settings → Your apps ===== */
-const firebaseConfig={apiKey:"AIzaSyDJ5wdIuFhv_ybTHR5_6WGvR-8QDMh6C3I",authDomain:"boikothon-726a6.firebaseapp.com",projectId:"boikothon-726a6",storageBucket:"boikothon-726a6.firebasestorage.app",messagingSenderId:"858985968963",appId:"1:858985968963:web:3b9bbea0d5e96076682bf6"};
+const firebaseConfig={apiKey:"AIzaSyAfac09qJ_e0YmziIUY7WtI4R96e--q-ew",authDomain:"boikothonbd-de776.firebaseapp.com",projectId:"boikothonbd-de776",storageBucket:"boikothonbd-de776.firebasestorage.app",messagingSenderId:"504168680788",appId:"1:504168680788:web:e3d3bc649f52202efd0cc1"};
 /* ===== Firebase সংযোগ (বাকি কোড আগের মতোই) ===== */
 const app=initializeApp(firebaseConfig),auth=getAuth(app),fdb=getFirestore(app);
 let AU=null;await new Promise(r=>{const u=onAuthStateChanged(auth,x=>{AU=x;u();r()})});
