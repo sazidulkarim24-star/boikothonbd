@@ -489,9 +489,10 @@ $("rq-go").onclick=rqAdd;
 const relRow=x=>h("a",{class:"dr",href:"#b-"+x.id,on:{click:e=>{e.preventDefault();go("b-"+x.id)}}},cover(x),h("span",{},h("b",{text:x.title}),h("small",{text:au(x)})));
 function relBox(r){const L=S.rev.filter(x=>x.id!==r.id&&x.cat===r.cat).sort((a,b)=>b.at-a.at).slice(0,4);return L.length?h("section",{class:"dsec",style:"max-width:none"},h("h2",{text:"“"+r.cat+"” বিভাগের আরও রিভিউ"}),L.map(relRow)):null}
 function authorBooks(a){const k=t=>(t||"").replace(/\s+/g," ").trim().toLowerCase(),L=S.rev.filter(x=>k(x.author)&&k(x.author)===k(a.name));return L.length?h("section",{class:"dsec"},h("h2",{text:"এই লেখকের রিভিউ করা বই"}),L.map(relRow)):null}
+function bd(n){return String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d])}
 const tk=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")},monthKey=()=>tk().slice(0,7);
 const stBn={pending:"যাচাই চলছে",approved:"অনুমোদিত",shipped:"পাঠানো হয়েছে",rejected:"বাতিল"},LET=["ক","খ","গ","ঘ"];
-const fmtT=s=>{s=Math.max(0,s);return bnum(Math.floor(s/60))+":"+bnum(String(s%60).padStart(2,"0"))};
+const fmtT=s=>{s=Math.max(0,s);return bd(Math.floor(s/60))+":"+bd(String(s%60).padStart(2,"0"))};
 function calcPts(att,qr,rd){const res={};qr.forEach(r=>res[r.id]=r.ans||[]);
   const rows=att.filter(a=>res[a.qid]).map(a=>{let c=0;(a.ans||[]).forEach((v,i)=>{if(v===res[a.qid][i])c++});return{qid:a.qid,c}}).sort((x,y)=>x.qid<y.qid?1:-1);
   const earned=rows.reduce((t,r)=>t+r.c*5,0),spent=rd.filter(r=>r.kind==="gift"&&r.status!=="rejected").reduce((t,r)=>t+(+r.points||0),0);
@@ -518,7 +519,7 @@ async function startQuiz(){const q=S.qz;if(!AU||!q)return;if(S.act&&S.act.id===q
       $("quiz").replaceChildren(h("div",{class:"box",style:"text-align:center"},h("h2",{text:"জমা হয়েছে"}),h("p",{text:"আপনার উত্তর জমা নেওয়া হয়েছে। কুইজের দিন শেষে উত্তর প্রকাশ হলে প্রতিটি সঠিক উত্তরের জন্য ৫ পয়েন্ট ড্যাশবোর্ডে যোগ হবে।"}),back))}
     catch(e){$("quiz").replaceChildren(h("div",{class:"box",style:"text-align:center"},h("h2",{text:"জমা নেওয়া যায়নি"}),h("p",{text:"সময় শেষ হয়ে গেছে বা নেটওয়ার্কে সমস্যা হয়েছে।"}),back))}
     S.act=null};
-  const form=q.qs.map((x,i)=>h("fieldset",{class:"qq"},h("legend",{text:bnum(i+1)+". "+x.q}),x.o.map((o,j)=>h("label",{class:"qo"},h("input",{type:"radio",name:"q"+i,value:String(j),on:{change:()=>{ans[i]=j}}}),h("span",{text:o})))));
+  const form=q.qs.map((x,i)=>h("fieldset",{class:"qq"},h("legend",{text:bd(i+1)+". "+x.q}),x.o.map((o,j)=>h("label",{class:"qo"},h("input",{type:"radio",name:"q"+i,value:String(j),on:{change:()=>{ans[i]=j}}}),h("span",{text:o})))));
   qsb=h("button",{class:"btn",type:"button",text:"জমা দিন",on:{click:()=>{if(confirm("জমা দিলে আর বদলানো যাবে না। নিশ্চিত?"))sub(false)}}});
   $("quiz").replaceChildren(h("div",{class:"qt"},"সময় বাকি: ",tm),h("h2",{text:q.title||"আজকের কুইজ",style:"margin-top:12px"}),form,h("div",{style:"text-align:center;margin:16px 0"},qsb),msg);
   act0.iv=setInterval(tick,1000);go("quiz")}
@@ -533,25 +534,25 @@ function shipForm(kind,month,label,pt){const n=h("input",{placeholder:"প্র
 async function joinDraw(P){const mo=monthKey();if(P.bal<1000){toast("১০০০ পয়েন্ট লাগবে।");return}try{await S.db.doc("redeems/draw_"+AU.uid+"_"+mo).set({uid:AU.uid,kind:"draw",month:mo,points:0,name:(AU.displayName||AU.email||"পাঠক").slice(0,80),phone:"",addr:"",at:Date.now(),status:"pending"});toast("ড্রতে অংশ নিয়েছেন।")}catch(e){toast("অংশ নেওয়া যায়নি।")}}
 function wonBox(d){const has=S.rd.some(r=>r.kind==="prize"&&r.month===d.month);return h("div",{class:"warn",style:"margin:12px 0"},h("b",{text:"অভিনন্দন! আপনি "+d.month+" মাসের ড্রের বিজয়ী।"}),has?h("p",{text:"আপনার ঠিকানা জমা আছে। পুরস্কার ১০–১৫ কার্যদিবসের মধ্যে পাঠানো হবে।"}):h("details",{},h("summary",{class:"btn",text:"পুরস্কারের ঠিকানা দিন"}),shipForm("prize",d.month,"ঠিকানা জমা দিন",0)))}
 function pointsBox(){const P=pts(),mo=monthKey(),joined=S.rd.some(r=>r.kind==="draw"&&r.month===mo),won=S.dw.filter(d=>(d.uids||[]).includes(AU.uid)),
-  stt=(v,l)=>h("div",{},h("b",{text:bnum(v)}),h("span",{text:l})),bar=(v,m)=>h("div",{class:"pbar"},h("i",{style:"width:"+Math.max(0,Math.min(100,Math.round(v/m*100)))+"%"}));
+  stt=(v,l)=>h("div",{},h("b",{text:bd(v)}),h("span",{text:l})),bar=(v,m)=>h("div",{class:"pbar"},h("i",{style:"width:"+Math.max(0,Math.min(100,Math.round(v/m*100)))+"%"}));
   return h("section",{class:"dsec"},h("h2",{text:"পয়েন্ট"}),
    h("div",{class:"stats",style:"grid-template-columns:repeat(3,minmax(0,1fr))"},stt(P.bal,"বর্তমান পয়েন্ট"),stt(P.earned,"মোট অর্জিত"),stt(P.spent,"খরচ")),
-   h("p",{class:"bnote",text:"প্রতিটি সঠিক উত্তরে ৫ পয়েন্ট। কুইজের উত্তর প্রকাশের পর পয়েন্ট যোগ হয়"+(P.wait?" (এখন অপেক্ষায়: "+bnum(P.wait)+"টি কুইজ)":"")+"।"}),
+   h("p",{class:"bnote",text:"প্রতিটি সঠিক উত্তরে ৫ পয়েন্ট। কুইজের উত্তর প্রকাশের পর পয়েন্ট যোগ হয়"+(P.wait?" (এখন অপেক্ষায়: "+bd(P.wait)+"টি কুইজ)":"")+"।"}),
    h("h3",{text:"বই গিফট (১৫০০ পয়েন্ট)"}),bar(P.bal,1500),
-   P.bal>=1500?h("details",{},h("summary",{class:"btn",text:"বই গিফট নিন"}),h("p",{class:"bnote",text:"নিলে ১৫০০ পয়েন্ট কেটে নেওয়া হবে। অ্যাডমিন যাচাই করে ১০–১৫ কার্যদিবসের মধ্যে পাঠাবেন।"}),shipForm("gift",mo,"গিফটের অনুরোধ পাঠান",1500)):h("p",{class:"bnote",text:"আরও "+bnum(1500-Math.max(0,P.bal))+" পয়েন্ট হলে একটি বই গিফট নিতে পারবেন।"}),
+   P.bal>=1500?h("details",{},h("summary",{class:"btn",text:"বই গিফট নিন"}),h("p",{class:"bnote",text:"নিলে ১৫০০ পয়েন্ট কেটে নেওয়া হবে। অ্যাডমিন যাচাই করে ১০–১৫ কার্যদিবসের মধ্যে পাঠাবেন।"}),shipForm("gift",mo,"গিফটের অনুরোধ পাঠান",1500)):h("p",{class:"bnote",text:"আরও "+bd(1500-Math.max(0,P.bal))+" পয়েন্ট হলে একটি বই গিফট নিতে পারবেন।"}),
    h("h3",{text:"মাসিক ড্র (১০০০ পয়েন্ট)"}),bar(P.bal,1000),
    h("p",{class:"bnote",text:"১০০০ বা তার বেশি পয়েন্ট থাকলে মাসিক ড্রতে অংশ নেওয়া যায় (পয়েন্ট কাটা হয় না)। প্রতি মাসে ১০ জন বিজয়ী পুরস্কার পান।"}),
    joined?h("p",{text:"এই মাসের ড্রতে আপনি অংশ নিয়েছেন।",style:"font-weight:700"}):(P.bal>=1000?h("button",{class:"btn",type:"button",text:"এই মাসের ড্রতে অংশ নিন",on:{click:()=>joinDraw(P)}}):null),
    won.map(wonBox),
    h("h3",{text:"আমার অনুরোধ"}),h("ul",{class:"al"},S.rd.length?[...S.rd].sort((x,y)=>(y.at||0)-(x.at||0)).map(r=>h("li",{},h("span",{text:r.kind==="gift"?"বই গিফট":r.kind==="draw"?"ড্র অংশগ্রহণ ("+r.month+")":"পুরস্কারের ঠিকানা ("+r.month+")"}),h("span",{class:"badge",text:stBn[r.status]||r.status}))):[h("li",{text:"কোনো অনুরোধ নেই।"})]),
    h("p",{class:"bnote",text:"গিফট ও পুরস্কার অনুমোদনের পর ১০–১৫ কার্যদিবসের মধ্যে পাঠানো হবে।"}),
-   h("h3",{text:"কুইজের ইতিহাস"}),h("ul",{class:"al"},P.rows.length?P.rows.map(r=>h("li",{},h("span",{text:r.qid}),h("span",{text:bnum(r.c)+"/১০ · "+bnum(r.c*5)+" পয়েন্ট"}))):[h("li",{text:"এখনো কোনো ফলাফল প্রকাশিত হয়নি।"})]))}
+   h("h3",{text:"কুইজের ইতিহাস"}),h("ul",{class:"al"},P.rows.length?P.rows.map(r=>h("li",{},h("span",{text:r.qid}),h("span",{text:bd(r.c)+"/১০ · "+bd(r.c*5)+" পয়েন্ট"}))):[h("li",{text:"এখনো কোনো ফলাফল প্রকাশিত হয়নি।"})]))}
 /* admin: quiz + prizes */
-function buildQ(){$("qz-form").replaceChildren(...Array.from({length:10},(_,i)=>h("fieldset",{class:"qq"},h("legend",{text:"প্রশ্ন "+bnum(i+1)}),h("textarea",{id:"qq"+i,rows:"2",maxlength:"200",placeholder:"প্রশ্ন লিখুন","aria-label":"প্রশ্ন "+bnum(i+1)}),...[0,1,2,3].map(j=>h("input",{id:"qo"+i+"_"+j,maxlength:"100",placeholder:"অপশন "+LET[j],"aria-label":"প্রশ্ন "+bnum(i+1)+" অপশন "+LET[j],style:"margin-top:6px"})),h("select",{id:"qa"+i,"aria-label":"প্রশ্ন "+bnum(i+1)+" সঠিক উত্তর",style:"margin-top:6px"},...[0,1,2,3].map(j=>h("option",{value:String(j),text:"সঠিক উত্তর: "+LET[j]}))))))}
+function buildQ(){$("qz-form").replaceChildren(...Array.from({length:10},(_,i)=>h("fieldset",{class:"qq"},h("legend",{text:"প্রশ্ন "+bd(i+1)}),h("textarea",{id:"qq"+i,rows:"2",maxlength:"200",placeholder:"প্রশ্ন লিখুন","aria-label":"প্রশ্ন "+bd(i+1)}),...[0,1,2,3].map(j=>h("input",{id:"qo"+i+"_"+j,maxlength:"100",placeholder:"অপশন "+LET[j],"aria-label":"প্রশ্ন "+bd(i+1)+" অপশন "+LET[j],style:"margin-top:6px"})),h("select",{id:"qa"+i,"aria-label":"প্রশ্ন "+bd(i+1)+" সঠিক উত্তর",style:"margin-top:6px"},...[0,1,2,3].map(j=>h("option",{value:String(j),text:"সঠিক উত্তর: "+LET[j]}))))))}
 async function pubQuiz(){const m=$("qz-msg"),date=$("qz-date").value,title=$("qz-title").value.trim()||"আজকের কুইজ";
   if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){m.textContent="কুইজের তারিখ দিন।";return}
   const qs=[],ans=[];for(let i=0;i<10;i++){const q=$("qq"+i).value.trim(),o=[0,1,2,3].map(j=>$("qo"+i+"_"+j).value.trim());
-    if(!q||q.length>200||o.some(x=>!x||x.length>100)){m.textContent="প্রশ্ন "+bnum(i+1)+": প্রশ্ন ও চারটা অপশনই দিন।";return}qs.push({q,o});ans.push(+$("qa"+i).value)}
+    if(!q||q.length>200||o.some(x=>!x||x.length>100)){m.textContent="প্রশ্ন "+bd(i+1)+": প্রশ্ন ও চারটা অপশনই দিন।";return}qs.push({q,o});ans.push(+$("qa"+i).value)}
   if(S.qr.some(r=>r.id===date)){m.textContent="এই তারিখের উত্তর আগেই প্রকাশিত, বদলানো যাবে না।";return}
   if(S.aq.some(x=>x.id===date)&&!confirm("এই তারিখে কুইজ আছে। বদলাবেন?"))return;
   try{await S.db.doc("quizKeys/"+date).set({ans});await S.db.doc("quizzes/"+date).set({title,date,qs,at:Date.now()});m.textContent="কুইজ প্রকাশিত হয়েছে।"}catch(e){m.textContent="প্রকাশ করা যায়নি।"}}
@@ -562,17 +563,17 @@ function aQz(){if(!S.admin)return;$("qz-list").replaceChildren(...(S.aq.length?[
 const setSt=(r,status)=>S.db.doc("redeems/"+r.id).update({status}).catch(()=>toast("পরিবর্তন করা যায়নি।"));
 const attOf=async uid=>(await S.db.collection("attempts").where("uid","==",uid).get()).docs.map(d=>d.data());
 function aPz(){if(!S.admin)return;const L=[...S.ard].sort((a,b)=>(a.status==="pending"?0:1)-(b.status==="pending"?0:1)||(b.at||0)-(a.at||0));
-  const mo=$("dr-m").value||monthKey();$("dr-i").textContent="এই মাসের ড্র-অংশগ্রহণ: "+bnum(S.ard.filter(r=>r.kind==="draw"&&r.month===mo&&r.status!=="rejected").length)+" জন";
+  const mo=$("dr-m").value||monthKey();$("dr-i").textContent="এই মাসের ড্র-অংশগ্রহণ: "+bd(S.ard.filter(r=>r.kind==="draw"&&r.month===mo&&r.status!=="rejected").length)+" জন";
   $("pz-list").replaceChildren(...(L.length?L.slice(0,40).map(r=>{const info=h("small",{}),kind=r.kind==="gift"?"বই গিফট":r.kind==="draw"?"ড্র ("+r.month+")":"পুরস্কার ("+r.month+")";
     return h("li",{style:"display:grid;gap:6px"},h("span",{},h("b",{text:kind+" · "+(r.name||"")}),h("small",{text:(r.phone||"")+(r.addr?" · "+r.addr:"")}),h("small",{text:"অবস্থা: "+(stBn[r.status]||r.status)}),info),
-      h("span",{class:"row",style:"margin:0"},act("যাচাই",async()=>{info.textContent="যাচাই হচ্ছে…";try{const P=calcPts(await attOf(r.uid),S.qr,S.ard.filter(x=>x.uid===r.uid&&x.id!==r.id));info.textContent="অর্জিত "+bnum(P.earned)+" · অন্য গিফটে খরচ "+bnum(P.spent)+" · ব্যালেন্স "+bnum(P.bal)+(r.kind==="gift"?(P.bal>=1500?" ✓ ১৫০০ আছে":" ✗ ১৫০০ নেই"):r.kind==="draw"?(P.bal>=1000?" ✓ ১০০০ আছে":" ✗ ১০০০ নেই"):"")}catch(e){info.textContent="যাচাই করা যায়নি।"}}),
+      h("span",{class:"row",style:"margin:0"},act("যাচাই",async()=>{info.textContent="যাচাই হচ্ছে…";try{const P=calcPts(await attOf(r.uid),S.qr,S.ard.filter(x=>x.uid===r.uid&&x.id!==r.id));info.textContent="অর্জিত "+bd(P.earned)+" · অন্য গিফটে খরচ "+bd(P.spent)+" · ব্যালেন্স "+bd(P.bal)+(r.kind==="gift"?(P.bal>=1500?" ✓ ১৫০০ আছে":" ✗ ১৫০০ নেই"):r.kind==="draw"?(P.bal>=1000?" ✓ ১০০০ আছে":" ✗ ১০০০ নেই"):"")}catch(e){info.textContent="যাচাই করা যায়নি।"}}),
         act("অনুমোদন",()=>setSt(r,"approved")),act("পাঠানো হয়েছে",()=>setSt(r,"shipped")),act("বাতিল",()=>setSt(r,"rejected")),act("মুছুন",()=>{if(confirm("মুছবেন?"))S.db.doc("redeems/"+r.id).delete().catch(()=>toast("মোছা যায়নি।"))})))}):[h("li",{text:"এখনো কোনো অনুরোধ নেই।"})]))}
 const shuf=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=crypto.getRandomValues(new Uint32Array(1))[0]%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
 async function runDraw(){const m=$("dr-msg"),mo=$("dr-m").value;if(!mo){m.textContent="মাস বাছুন।";return}
   const ent=S.ard.filter(r=>r.kind==="draw"&&r.month===mo&&r.status!=="rejected");if(!ent.length){m.textContent="এই মাসে কেউ অংশ নেয়নি।";return}
   m.textContent="যাচাই হচ্ছে…";const ok=[];try{for(const e of ent){const P=calcPts(await attOf(e.uid),S.qr,S.ard.filter(x=>x.uid===e.uid));if(P.bal>=1000)ok.push(e)}}catch(er){m.textContent="যাচাই করা যায়নি।";return}
   if(!ok.length){m.textContent="যাচাইয়ে ১০০০ পয়েন্ট পাওয়া কেউ নেই।";return}
-  const w=shuf(ok).slice(0,10);if(!confirm(bnum(ok.length)+" জন যোগ্য থেকে "+bnum(w.length)+" জন বিজয়ী ঘোষণা করবেন? (বিজয়ীদের নাম সবার কাছে দেখাবে)"))return;
+  const w=shuf(ok).slice(0,10);if(!confirm(bd(ok.length)+" জন যোগ্য থেকে "+bd(w.length)+" জন বিজয়ী ঘোষণা করবেন? (বিজয়ীদের নাম সবার কাছে দেখাবে)"))return;
   try{await S.db.doc("draws/"+mo).set({month:mo,uids:w.map(x=>x.uid),names:w.map(x=>x.name||"পাঠক"),at:Date.now()});m.textContent="বিজয়ী: "+w.map(x=>x.name).join(", ")}catch(e){m.textContent="ঘোষণা করা যায়নি।"}}
 buildQ();$("qz-date").value=tk();$("dr-m").value=monthKey();
 $("qz-pub").onclick=pubQuiz;$("qz-clr").onclick=()=>{buildQ();$("qz-msg").textContent=""};$("dr-go").onclick=runDraw;$("dr-m").onchange=aPz;
