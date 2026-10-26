@@ -521,7 +521,7 @@ async function startQuiz(){const q=S.qz;if(!AU||!q)return;if(S.act&&S.act.id===q
     S.act=null};
   const form=q.qs.map((x,i)=>h("fieldset",{class:"qq"},h("legend",{text:bd(i+1)+". "+x.q}),x.o.map((o,j)=>h("label",{class:"qo"},h("input",{type:"radio",name:"q"+i,value:String(j),on:{change:()=>{ans[i]=j}}}),h("span",{text:o})))));
   qsb=h("button",{class:"btn",type:"button",text:"জমা দিন",on:{click:()=>{if(confirm("জমা দিলে আর বদলানো যাবে না। নিশ্চিত?"))sub(false)}}});
-  $("quiz").replaceChildren(h("div",{class:"qt"},"সময় বাকি: ",tm),h("h2",{text:q.title||"আজকের কুইজ",style:"margin-top:12px"}),form,h("div",{style:"text-align:center;margin:16px 0"},qsb),msg);
+  $("quiz").replaceChildren(h("div",{class:"qt"},"সময় বাকি: ",tm),h("h2",{text:q.title||"আজকের কুইজ",style:"margin-top:12px"}),...form,h("div",{style:"text-align:center;margin:16px 0"},qsb),msg);
   act0.iv=setInterval(tick,1000);go("quiz")}
 function shipForm(kind,month,label,pt){const n=h("input",{placeholder:"প্রাপকের নাম",maxlength:"80","aria-label":"প্রাপকের নাম",value:AU.displayName||""}),p=h("input",{placeholder:"মোবাইল নম্বর",maxlength:"20",inputmode:"tel","aria-label":"মোবাইল নম্বর"}),a=h("textarea",{rows:"3",maxlength:"300",placeholder:"পূর্ণ ঠিকানা (জেলা, থানা, এলাকা, বাড়ি/রাস্তা)","aria-label":"পূর্ণ ঠিকানা"}),m=h("p",{role:"status",class:"bnote"});
   const btn=h("button",{class:"btn",type:"button",text:label,on:{click:async()=>{const name=n.value.trim(),phone=p.value.trim(),addr=a.value.trim();
