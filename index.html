@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>বইকথন – সৎ বুক রিভিউ</title>
-<meta name="google-site-verification" content="gSWrrJAT3WtMzVxSlOd0lwVl6PKXQImr2oQsgYZMX3E" />
 <meta name="description" content="বইকথন: ইসলামিক, ইতিহাস, গল্প, উপন্যাসসহ বিভিন্ন বইয়ের সৎ রিভিউ, মূলবক্তব্য ও Super Point।">
 <meta property="og:type" content="website"><meta property="og:site_name" content="বইকথন (Boikothon)">
 <meta property="og:title" content="বইকথন – সৎ বুক রিভিউ"><meta property="og:description" content="সৎ রিভিউ, মূলবক্তব্য আর Super Point।">
@@ -187,6 +186,31 @@ img{-webkit-user-drag:none}
 .dcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:14px}
 .dst{margin-top:14px}.rlink{margin:8px 0;font-size:.85rem}
 @media(min-width:900px){#dash{max-width:760px;margin:0 auto}}
+
+/* dashboard v2 */
+#dash .dsec{max-width:none;margin:0}
+.dtop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-top:8px}
+.dcrumb{color:var(--muted)}.dtitle{font:700 1.7rem 'Hind Siliguri',sans-serif;margin:0}
+.dchip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px 14px}
+.dchip .dic{width:22px;height:22px;color:var(--accent)}.dchip span{display:grid;line-height:1.3}.dchip small{color:var(--muted)}
+.dprof{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:8px}
+.dprof .ap{width:84px;height:84px;font-size:2rem;margin:0;flex:none}
+.dpi{flex:1 1 180px;min-width:0;text-align:left}.dpi h2{font:700 1.25rem 'Hind Siliguri',sans-serif;margin:0}.dpi small{display:block;color:var(--muted)}
+.dprof .dlv{background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--accent);margin-top:6px}.dprof .dnx{margin:6px 0 0;color:var(--muted);font-size:.88rem;opacity:1}
+.dprof .dpt{background:var(--accent);color:var(--accent-text);border-radius:14px;padding:10px 20px;text-align:center}.dprof .dpt b{font-size:2.3rem;margin:0}
+.dg4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.sc2{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;min-width:0}
+.sc2>div{min-width:0}.sc2 b{display:block;font:700 1.35rem 'Hind Siliguri',sans-serif;line-height:1.25;overflow-wrap:anywhere}.sc2 b.rb{font-size:1rem}
+.sc2 span{display:block;color:var(--muted);font-size:.85rem}.sc2 small{display:block;color:var(--tc);font-size:.78rem;margin-top:2px;font-weight:600}
+.tile{flex:none;width:44px;height:44px;border-radius:12px;display:flex!important;align-items:center;justify-content:center;background:color-mix(in srgb,var(--tc) 16%,var(--surface));color:var(--tc)!important}.tile .dic{width:22px;height:22px}
+.sc2 .ring{width:58px;height:58px;flex:none;color:var(--text)}
+.c1{--tc:#b4472b}.c2{--tc:#b9822a}.c3{--tc:#5a7a52}.c4{--tc:#8a4f7d}
+.dch,.dgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:14px;align-items:start}
+.dgrid>*{margin-top:0!important}.dcard h2{margin:0 0 6px;font-size:1.15rem}
+.chart{width:100%;height:auto;display:block}
+.dnut{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}.donut{width:150px;height:150px;color:var(--text)}
+.dleg{list-style:none;margin:0;padding:0;display:grid;gap:8px;flex:1 1 130px}.dleg li{display:flex;align-items:center;gap:8px;font-size:.9rem}.dleg i{width:12px;height:12px;border-radius:4px;flex:none}.dleg span{flex:1}
+@media(min-width:900px){#dash{max-width:none}.dg4{grid-template-columns:repeat(4,minmax(0,1fr))}.dch{grid-template-columns:1.7fr 1fr}.dgrid{grid-template-columns:1fr 1fr}.sc2 .ring{width:68px;height:68px}.dtitle{font-size:2rem}}
 </style>
 </head>
 <body>
@@ -630,18 +654,47 @@ function rewardBox(P){const mo=monthKey(),joined=S.rd.some(r=>r.kind==="draw"&&r
    h("p",{class:"bnote",text:"গিফট ও পুরস্কার অনুমোদনের পর ১০–১৫ কার্যদিবসের মধ্যে পাঠানো হবে।"}))}
 function historyBox(P){const B=bonus(),L=[];if(S.ud)L.push(["সাইন-ইন বোনাস","+"+bn(20)]);if(B.r)L.push(["রেফারেল ("+bn(Math.min(S.refs.length,50))+" জন)","+"+bn(B.r)]);P.rows.forEach(r=>L.push(["কুইজ "+r.qid+" ("+bn(r.c)+"/১০)","+"+bn(r.c*5)]));if(P.spent)L.push(["বই গিফটে খরচ","−"+bn(P.spent)]);
   return h("section",{class:"dsec dcard"},h("h2",{text:"পয়েন্টের হিসাব"}),h("ul",{class:"al"},L.length?L.map(([x,y])=>h("li",{},h("span",{text:x}),h("b",{text:y}))):[h("li",{text:"এখনো কোনো পয়েন্ট নেই।"})]),P.wait?h("p",{class:"bnote",text:"অপেক্ষায় আছে: "+bn(P.wait)+"টি কুইজ (রাত ১২টায় কুইজ বন্ধ হলে পয়েন্ট যোগ হবে)।"}):null)}
-function dashboard(){if(!AU)return;const nm=AU.displayName||AU.email||"পাঠক",P=pts(),lv=lvOf(P.earned),nx=nxLv(P.earned),
+const DIC={pts:'<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>',quiz:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>',users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M17 11a3 3 0 100-6M21 20c0-2.5-1.5-4.6-3.6-5.5"/>',cup:'<path d="M8 4h8v5a4 4 0 01-8 0zM8 6H4v2a4 4 0 004 4M16 6h4v2a4 4 0 01-4 4M12 13v4M8 20h8"/>',msg:'<path d="M4 5h16v11H9l-5 4z"/>',cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>'};
+function svgEl(m,vb,cls){const e=document.createElementNS("http://www.w3.org/2000/svg","svg");e.setAttribute("viewBox",vb);if(cls)e.setAttribute("class",cls);e.setAttribute("aria-hidden","true");e.innerHTML=m;return e}
+const dIc=n=>svgEl('<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+DIC[n]+'</g>',"0 0 24 24","dic");
+const scard=(ic,cls,num,lab,sub)=>h("div",{class:"sc2 "+cls},h("span",{class:"tile"},dIc(ic)),h("div",{},h("b",{text:num}),h("span",{text:lab}),sub?h("small",{text:sub}):null));
+function dRing(v,max,l,sub,cls){const p=Math.max(0,Math.min(100,Math.round(v/max*100))),C=2*Math.PI*28;return h("div",{class:"sc2 "+cls},svgEl('<circle cx="34" cy="34" r="28" fill="none" stroke="var(--border)" stroke-width="7"/><circle cx="34" cy="34" r="28" fill="none" stroke="var(--tc)" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+(C*p/100).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 34 34)"/><text x="34" y="39" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">'+bn(p)+'%</text>',"0 0 68 68","ring"),h("div",{},h("b",{class:"rb",text:l}),h("small",{text:sub})))}
+function dLine(rows){const d=[...rows].reverse().slice(-7).map(r=>({x:r.qid.slice(8,10)+"/"+r.qid.slice(5,7),v:r.c*5}));
+  if(!d.length)return h("p",{class:"bnote",text:"কুইজের উত্তর প্রকাশ হলে এখানে আপনার ফলের গ্রাফ আসবে।"});
+  const W=520,H=220,L=34,B=28,T=14,R=12,X=i=>d.length===1?L+(W-L-R)/2:L+i*(W-L-R)/(d.length-1),Y=v=>T+(H-T-B)*(1-v/50);let g="";
+  for(let v=0;v<=50;v+=10)g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--border)"/><text x="'+(L-6)+'" y="'+(Y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+bn(v)+'</text>';
+  const pt=d.map((q,i)=>X(i).toFixed(1)+","+Y(q.v).toFixed(1)).join(" "),area=d.length>1?'<polygon points="'+X(0).toFixed(1)+","+Y(0)+" "+pt+" "+X(d.length-1).toFixed(1)+","+Y(0)+'" fill="var(--accent)" opacity=".13"/><polyline points="'+pt+'" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>':"";
+  const dots=d.map((q,i)=>'<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(q.v).toFixed(1)+'" r="4.5" fill="var(--surface)" stroke="var(--accent)" stroke-width="2.5"/><text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+bnum(q.x)+'</text>').join("");
+  return svgEl(g+area+dots,"0 0 "+W+" "+H,"chart")}
+function dDonut(segs){const tot=segs.reduce((t,x)=>t+x[0],0);if(!tot)return h("p",{class:"bnote",text:"এখনো কোনো পয়েন্ট নেই।"});
+  const C=2*Math.PI*42;let acc=0,m='<circle cx="60" cy="60" r="42" fill="none" stroke="var(--border)" stroke-width="16"/>';
+  segs.forEach(x=>{if(x[0]>0){const dl=x[0]/tot*C;m+='<circle cx="60" cy="60" r="42" fill="none" stroke="'+x[2]+'" stroke-width="16" stroke-dasharray="'+dl.toFixed(1)+' '+(C-dl).toFixed(1)+'" stroke-dashoffset="'+(-acc).toFixed(1)+'" transform="rotate(-90 60 60)"/>';acc+=dl}});
+  m+='<text x="60" y="62" text-anchor="middle" font-size="20" font-weight="700" fill="currentColor">'+bn(tot)+'</text><text x="60" y="78" text-anchor="middle" font-size="9" fill="var(--muted)">মোট পয়েন্ট</text>';
+  return h("div",{class:"dnut"},svgEl(m,"0 0 120 120","donut"),h("ul",{class:"dleg"},segs.map(x=>h("li",{},h("i",{style:"background:"+x[2]}),h("span",{text:x[1]}),h("b",{text:bn(x[0])})))))}
+function dashboard(){if(!AU)return;const nm=AU.displayName||AU.email||"পাঠক",P=pts(),lv=lvOf(P.earned),nx=nxLv(P.earned),B=bonus(),qp=P.rows.reduce((t,r)=>t+r.c*5,0),cr=P.rows.reduce((t,r)=>t+r.c,0),
   mine=Object.entries(S.cm).flatMap(([rid,a])=>a.filter(c=>c.uid===S.me).map(c=>({...c,rid}))).sort((x,y)=>(y.at||0)-(x.at||0)),
   sv=S.bk.map(id=>S.rev.find(r=>r.id===id)).filter(Boolean),go2=r=>e=>{e.preventDefault();go("b-"+r.id)},
-  pic=AU.photoURL?h("img",{class:"ap",src:AU.photoURL,alt:"",referrerpolicy:"no-referrer",width:"96",height:"96"}):h("div",{class:"ap",text:[...nm.trim()][0]}),
-  stt=(v,l)=>h("div",{},h("b",{text:bn(v)}),h("span",{text:l}));
-  $("dash").replaceChildren(h("div",{style:"text-align:left"},h("a",{href:"#",class:"mini",text:"← হোম",on:{click:e=>{e.preventDefault();goHome()}}})),
-   h("section",{class:"dhero"},pic,h("h1",{text:nm}),h("small",{text:AU.email||""}),h("span",{class:"dlv",text:lv[1]}),h("div",{class:"dpt"},h("b",{text:bn(P.bal)}),h("span",{text:"বর্তমান পয়েন্ট"})),h("p",{class:"dnx",text:nx?"পরের স্তর “"+nx[1]+"”-এ যেতে আরও "+bn(nx[0]-P.earned)+" পয়েন্ট":"আপনি সর্বোচ্চ স্তরে আছেন"})),
-   h("div",{class:"stats dst"},stt(sv.length,"সংরক্ষিত"),stt(mine.length,"মন্তব্য"),stt(Math.min(S.refs.length,50),"রেফারেল")),
-   refBox(),rewardBox(P),
-   h("section",{class:"dsec dcard"},h("h2",{text:"সংরক্ষিত বই"}),sv.length?sv.map(r=>h("a",{class:"dr",href:"#b-"+r.id,on:{click:go2(r)}},cover(r),h("span",{},h("b",{text:r.title}),h("small",{text:au(r)})))):h("p",{text:"এখনো কিছু সংরক্ষণ করেননি। যেকোনো বইয়ের পেজে “সংরক্ষণ করুন” চাপুন।",style:"color:var(--muted)"})),
-   h("section",{class:"dsec dcard"},h("h2",{text:"আমার মন্তব্য"}),mine.length?mine.map(c=>{const r=S.rev.find(x=>x.id===c.rid);return r?h("a",{class:"dr",href:"#b-"+r.id,on:{click:go2(r)},style:"grid-template-columns:1fr"},h("span",{},h("b",{text:r.title}),h("small",{text:c.text}))):null}):h("p",{text:"এখনো কোনো মন্তব্য করেননি।",style:"color:var(--muted)"})),
-   historyBox(P),
+  pic=AU.photoURL?h("img",{class:"ap",src:AU.photoURL,alt:"",referrerpolicy:"no-referrer",width:"84",height:"84"}):h("div",{class:"ap",text:[...nm.trim()][0]});
+  $("dash").replaceChildren(
+   h("div",{class:"dtop"},h("div",{},h("small",{class:"dcrumb",text:"হোম / ড্যাশবোর্ড"}),h("h1",{class:"dtitle",text:"ড্যাশবোর্ড"})),h("div",{class:"dchip"},dIc("cal"),h("span",{},h("small",{text:"আজ"}),h("b",{text:dt(Date.now())})))),
+   h("div",{style:"text-align:left;margin:4px 0 8px"},h("a",{href:"#",class:"mini",text:"← হোম",on:{click:e=>{e.preventDefault();goHome()}}})),
+   h("section",{class:"dprof"},pic,h("div",{class:"dpi"},h("h2",{text:nm}),h("small",{text:AU.email||""}),h("span",{class:"dlv",text:lv[1]}),h("p",{class:"dnx",text:nx?"পরের স্তর “"+nx[1]+"”-এ যেতে আরও "+bn(nx[0]-P.earned)+" পয়েন্ট":"আপনি সর্বোচ্চ স্তরে আছেন"})),h("div",{class:"dpt"},h("b",{text:bn(P.bal)}),h("span",{text:"বর্তমান পয়েন্ট"}))),
+   h("div",{class:"dg4"},
+    scard("pts","c1",bn(P.bal),"বর্তমান পয়েন্ট","মোট অর্জিত "+bn(P.earned)),
+    scard("quiz","c2",bn(S.att.length),"কুইজ দিয়েছি","সঠিক উত্তর "+bn(cr)+"টি"),
+    scard("mark","c3",bn(sv.length),"সংরক্ষিত বই","পরে পড়ার তালিকা"),
+    scard("users","c4",bn(Math.min(S.refs.length,50)),"রেফারেল","প্রতিজনে +২০ পয়েন্ট"),
+    dRing(P.bal,1500,"বই গিফট",P.bal>=1500?"নেওয়া যাবে":"আরও "+bn(1500-Math.max(0,P.bal))+" লাগবে","c1"),
+    dRing(P.bal,1000,"মাসিক ড্র",P.bal>=1000?"অংশ নেওয়া যাবে":"আরও "+bn(1000-Math.max(0,P.bal))+" লাগবে","c3"),
+    scard("msg","c2",bn(mine.length),"আমার মন্তব্য","সব বইয়ের মিলিয়ে"),
+    scard("cup","c4",lv[1],"আপনার স্তর",nx?"পরের স্তর: "+nx[1]:"সর্বোচ্চ স্তর")),
+   h("div",{class:"dch"},
+    h("section",{class:"dcard"},h("h2",{text:"কুইজের ফল (শেষ ৭টি)"}),h("p",{class:"bnote",text:"প্রতিটি কুইজে পাওয়া পয়েন্ট"+(P.wait?" · অপেক্ষায় "+bn(P.wait)+"টি":"")}),dLine(P.rows)),
+    h("section",{class:"dcard"},h("h2",{text:"পয়েন্টের উৎস"}),dDonut([[qp,"কুইজ","var(--accent)"],[S.ud?20:0,"সাইন-ইন বোনাস","#c98a1b"],[B.r,"রেফারেল","#5a7a52"]]))),
+   h("div",{class:"dgrid"},refBox(),rewardBox(P),
+    h("section",{class:"dsec dcard"},h("h2",{text:"সংরক্ষিত বই"}),sv.length?sv.map(r=>h("a",{class:"dr",href:"#b-"+r.id,on:{click:go2(r)}},cover(r),h("span",{},h("b",{text:r.title}),h("small",{text:au(r)})))):h("p",{text:"এখনো কিছু সংরক্ষণ করেননি। যেকোনো বইয়ের পেজে “সংরক্ষণ করুন” চাপুন।",style:"color:var(--muted)"})),
+    h("section",{class:"dsec dcard"},h("h2",{text:"আমার মন্তব্য"}),mine.length?mine.map(c=>{const r=S.rev.find(x=>x.id===c.rid);return r?h("a",{class:"dr",href:"#b-"+r.id,on:{click:go2(r)},style:"grid-template-columns:1fr"},h("span",{},h("b",{text:r.title}),h("small",{text:c.text}))):null}):h("p",{text:"এখনো কোনো মন্তব্য করেননি।",style:"color:var(--muted)"})),
+    historyBox(P)),
    h("div",{style:"text-align:center;margin:24px 0"},h("button",{class:"btn",type:"button",text:"সাইন-আউট",on:{click:()=>$("au").click()}})))}
 const OLD={"site": {"about": "বই কথন একটি স্বাধীন বুক রিভিউ প্ল্যাটফর্ম। এখানে প্রতিটি বইয়ের সৎ রিভিউ, ভালো-মন্দ দিক আর পাঠ-অভিজ্ঞতা তুলে ধরা হয়, যাতে আপনি সহজে আপনার পছন্দের ভালো বইটি খুঁজে পান।", "fb": "https://www.facebook.com/share/1RYR3mGXyY/", "ig": "", "o": "আমি মুহাম্মদ সাজিদুল করিম। বর্তমানে একজন স্টুডেন্ট হিসেবে পড়ালেখা করছি। বইকথন আমার নিয়ে নিজস্ব স্বাধীন একটি প্রতিষ্ঠান। যেখানে আমি যেকোনো বই পড়ার পর ( অন্তত ২ বার )  আপনাদের সাথে তা শেয়ার করি এবং বইয়ের মূল বক্তব্য এবং বইয়ের ভালো দিকগুলো তুলে ধরি।", "oi": "", "phone": "+8801338744300", "tg": "", "url": "", "wa": "+8801338744300"}, "reviews": [{"id": "mvltf3r2wryq", "at": 1792811065790, "author": "ইবনে হিশাম", "cat": "ইসলামিক", "cons": "", "cover": "", "main": "", "pros": "", "rating": 5, "spoiler": true, "sum": "", "sup": "", "title": "সীরাত ইবনে হিশাম"}, {"id": "mvlu6d1n3hwx", "at": 1792812337547, "author": "ড.ইউসূফ আল কারজাভি", "cat": "ইসলামিক", "cons": "", "cover": "", "main": "", "pros": "", "rating": 5, "spoiler": true, "sum": "", "sup": "", "title": "মুসলিম দেশে অমুসলিম অধিকার"}, {"id": "mvlv84tbr9nl", "at": 1792814099807, "author": "", "cat": "ইসলামিক", "cons": "", "cover": "", "main": "", "pros": "", "rating": 5, "spoiler": false, "sum": "", "sup": "", "title": "ওমর রা এর ঢাকা সফর"}, {"id": "mvlv8hs7twkf", "at": 1792814116615, "author": "", "cat": "ইসলামিক", "cons": "", "cover": "", "main": "", "pros": "", "rating": 5, "spoiler": false, "sum": "", "sup": "", "title": "বিশ্বনবী"}, {"id": "mvlv9fpzpt1k", "at": 1792814160599, "author": "বিভূতিভূষণ বন্দোপাধ্যায়", "cat": "উপন্যাস", "cons": "", "cover": "", "main": "", "pros": "", "rating": 5, "spoiler": false, "sum": "", "sup": "", "title": "পথের পাঁচালী"}]};
 $("imp").onclick=async()=>{if(!confirm("পুরনো সাইটের ৫টি রিভিউ ও সেটিংস (পরিচিতি, যোগাযোগ, স্বত্বাধিকারীর লেখা) আমদানি করবেন? বর্তমান সাইট সেটিংস বদলে যাবে।"))return;const m=$("s-msg");
