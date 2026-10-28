@@ -46,7 +46,7 @@ input,select,textarea{font:inherit;background:var(--surface);color:var(--text);b
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}@media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:860px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .25s,box-shadow .25s}
 .card:hover{border-color:var(--accent)}
-.cv{aspect-ratio:2/3;width:100%;object-fit:cover;display:block;background:var(--border)}
+.cv{aspect-ratio:2/3;width:100%;height:auto;object-fit:cover;display:block;background:var(--border)}
 .ph{aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;background:var(--accent);color:var(--accent-text);font:1.15rem var(--serif)}
 .card{padding:5px}.card .cv,.card .ph{width:100%}
 .cv,.ph{border-radius:8px}
@@ -211,6 +211,9 @@ img{-webkit-user-drag:none}
 .dnut{display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center}.donut{width:150px;height:150px;color:var(--text)}
 .dleg{list-style:none;margin:0;padding:0;display:grid;gap:8px;flex:1 1 130px}.dleg li{display:flex;align-items:center;gap:8px;font-size:.9rem}.dleg i{width:12px;height:12px;border-radius:4px;flex:none}.dleg span{flex:1}
 @media(min-width:900px){#dash{max-width:none}.dg4{grid-template-columns:repeat(4,minmax(0,1fr))}.dch{grid-template-columns:1.7fr 1fr}.dgrid{grid-template-columns:1fr 1fr}.sc2 .ring{width:68px;height:68px}.dtitle{font-size:2rem}}
+.gsec{margin:18px 0 8px}.ghd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.ghd h3{font:700 1.15rem 'Hind Siliguri',sans-serif;margin:0}
+.grail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:4px}.grail::-webkit-scrollbar{display:none}
+.card .cv,.card .ph{height:auto}
 </style>
 </head>
 <body>
@@ -254,11 +257,16 @@ img{-webkit-user-drag:none}
         <h2 id="a-h">নতুন লেখক পরিচিতি</h2>
         <label for="a-name">নাম</label><input id="a-name" maxlength="100">
         <label>লেখকের ছবি (JPEG, PNG বা WebP, সর্বোচ্চ ১০ MB)</label><input id="a-img" type="file" accept="image/jpeg,image/png,image/webp" hidden><img id="a-prev" alt="লেখকের ছবির প্রিভিউ" hidden width="96" height="96" style="width:96px;height:96px;border-radius:50%;object-fit:cover"><div class="row" style="margin:0"><button class="mini" id="a-pick" type="button">ছবি আপলোড করুন</button><button class="mini" id="a-rm" type="button" hidden>মুছে ফেলুন</button></div><div id="a-st" role="status" aria-live="polite"></div>
+        <label for="a-nick">ডাকনাম / ছদ্মনাম</label><input id="a-nick" maxlength="100">
         <label for="a-born">জন্ম তারিখ</label><input id="a-born" maxlength="150">
         <label for="a-place">জন্মস্থান</label><input id="a-place" maxlength="150">
         <label for="a-father">পিতার নাম</label><input id="a-father" maxlength="150">
         <label for="a-mother">মাতার নাম</label><input id="a-mother" maxlength="150">
+        <label for="a-job">পেশা</label><input id="a-job" maxlength="150" placeholder="যেমন: লেখক, অধ্যাপক, সাংবাদিক">
+        <label for="a-genre">লেখার ধারা ও বিষয়</label><input id="a-genre" maxlength="150" placeholder="যেমন: উপন্যাস, ইতিহাস, ইসলামি সাহিত্য">
+        <label for="a-edu">পড়ালেখা (প্রতি লাইনে একটি)</label><textarea id="a-edu" rows="3" maxlength="2000" placeholder="যেমন: স্নাতক, ঢাকা বিশ্ববিদ্যালয়"></textarea>
         <label for="a-works">অবদান</label><textarea id="a-works" rows="3" maxlength="2000"></textarea>
+        <label for="a-awards">অর্জন ও সম্মাননা (প্রতি লাইনে একটি)</label><textarea id="a-awards" rows="3" maxlength="2000"></textarea>
         <label for="a-books">গ্রন্থ (প্রতি লাইনে একটি)</label><textarea id="a-books" rows="3" maxlength="2000"></textarea>
         <label for="a-other">অন্যান্য</label><textarea id="a-other" rows="3" maxlength="2000"></textarea>
         <label for="a-died">মৃত্যুসন</label><input id="a-died" maxlength="150">
@@ -305,6 +313,7 @@ img{-webkit-user-drag:none}
     <div class="bar sc" id="chips" role="group" aria-label="বিভাগ"></div>
     <div class="bar sc" id="sorts" role="group" aria-label="সাজানো"></div>
     <p class="stat" id="stat" role="status" aria-live="polite"></p>
+    <div id="groups"></div>
     <div class="rail" id="list" aria-live="off"></div>
     <div style="text-align:center;margin-top:16px"><button class="btn" id="more" type="button" hidden>আরও দেখুন</button></div>
   </section>
@@ -385,11 +394,12 @@ function paint(){
   const T=S.q.toLowerCase().split(/\s+/).filter(Boolean),all=S.rev;
   let a=all.filter(r=>{if(S.cat!=="সব"&&r.cat!==S.cat)return false;const hay=[r.title,r.author,r.cat,r.sum,r.main,r.sup,r.pros,r.cons].join(" ").toLowerCase();return T.every(t=>hay.includes(t))});
   a.sort(S.sort==="pop"?(x,y)=>cnt(y)-cnt(x)||(+y.rating||0)-(+x.rating||0):S.sort==="top"?(x,y)=>(+y.rating||0)-(+x.rating||0)||y.at-x.at:(x,y)=>y.at-x.at);
+  const gm=isHome()&&all.length>0;
   $("chips").replaceChildren(...["সব",...CATS].map(c=>h("button",{class:"chip",type:"button","aria-pressed":String(c===S.cat),text:c==="সব"?"হোম":c,on:{click:()=>{S.cat=c;S.n=10;paint()}}})));
   $("sorts").replaceChildren(...[["new","সর্বশেষ"],["pop","জনপ্রিয় (বেশি মন্তব্য)"],["top","সর্বোচ্চ রেটিং"]].map(([k,t])=>h("button",{class:"chip",type:"button","aria-pressed":String(k===S.sort),text:t,on:{click:()=>{S.sort=k;S.n=10;paint()}}})));
   const rt=all.filter(hasR),avg=rt.length?rt.reduce((s,r)=>s+ +r.rating,0)/rt.length:0;
-  $("stat").textContent=!S.db?"রিভিউ দেখতে সাইন-ইন করা অবস্থায় পেজটি খুলুন।":S.err?"ডেটা লোড করা যায়নি। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।":!S.ready?"লোড হচ্ছে…":all.length?`মোট ${bn(all.length)}টি বইয়ের রিভিউ · ${rt.length?"গড় রেটিং "+bn(avg)+"/৫":"এখনো রেটিং নেই"} · দেখাচ্ছে ${bn(Math.min(a.length,S.n))}টি`:"এখনো কোনো রিভিউ প্রকাশিত হয়নি।";
-  $("more").hidden=a.length<=S.n;$("more").textContent="আরও দেখুন ("+bn(a.length-S.n)+"টি বাকি)";$("list").classList.toggle("v",!isHome());$("about").hidden=!!cur()||!isHome();const sl=$("list").scrollLeft;$("list").replaceChildren(...(all.length&&!a.length?[h("p",{class:"stat",style:"flex:1 0 100%;grid-column:1/-1",text:"কোনো বই মেলেনি। অন্য শব্দ লিখুন বা বিভাগ বদলে দেখুন।"})]:[]),...a.slice(0,S.n).map(r=>h("div",{class:"card"},h("a",{class:"cl",href:"#b-"+r.id,on:{click:e=>{e.preventDefault();go("b-"+r.id)}}},cover(r),h("div",{class:"cb"},h("span",{class:"tag",text:r.cat}),h("h3",{text:r.title}),h("small",{text:au(r)}),rate(r))),h("div",{class:"sh"},shareBtn(r)))));
+  $("stat").textContent=!S.db?"রিভিউ দেখতে সাইন-ইন করা অবস্থায় পেজটি খুলুন।":S.err?"ডেটা লোড করা যায়নি। পেজ রিফ্রেশ করে আবার চেষ্টা করুন।":!S.ready?"লোড হচ্ছে…":all.length?`মোট ${bn(all.length)}টি বইয়ের রিভিউ · ${rt.length?"গড় রেটিং "+bn(avg)+"/৫":"এখনো রেটিং নেই"}${gm?"":" · দেখাচ্ছে "+bn(Math.min(a.length,S.n))+"টি"}`:"এখনো কোনো রিভিউ প্রকাশিত হয়নি।";
+  $("groups").hidden=!gm;$("list").hidden=gm;if(gm)groupsRender(a);$("more").hidden=gm||a.length<=S.n;$("more").textContent="আরও দেখুন ("+bn(a.length-S.n)+"টি বাকি)";$("list").classList.toggle("v",!isHome());$("about").hidden=!!cur()||!isHome();const sl=$("list").scrollLeft;$("list").replaceChildren(...(all.length&&!a.length?[h("p",{class:"stat",style:"flex:1 0 100%;grid-column:1/-1",text:"কোনো বই মেলেনি। অন্য শব্দ লিখুন বা বিভাগ বদলে দেখুন।"})]:[]),...a.slice(0,S.n).map(cardEl));
   $("list").scrollLeft=sl;about();contact();manage();if(location.hash==="#owner")owner();ST.books=S.rev.length;statOne("books");authorsHome();aManage();rqRender();qzRender();aQz();aPz();if(curA())authorPage(curA());if(location.hash==="#dashboard")dashboard();if(cur())detail();
 }
 function about(){$("about-t").textContent=S.site.about||(S.admin?"অ্যাডমিন প্যানেল থেকে সম্পর্কের লেখা যোগ করুন।":"বই কথন সম্পর্কে লেখা শীঘ্রই যোগ করা হবে।")}
@@ -496,11 +506,11 @@ $("o-img").addEventListener("change",e=>{const f=e.target.files[0],st=$("o-st");
 $("o-rm").onclick=()=>{S.oFile=null;S.oi="";$("o-img").value="";$("o-st").textContent="ছবি সরানো হয়েছে। সংরক্ষণ চাপুন।";opv()};
 document.querySelectorAll("[data-own]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();$("nav").classList.remove("open");$("mb").setAttribute("aria-expanded","false");go("owner")}));
 function aSrc(id){return typeof imgSrc==="function"?imgSrc(id):"/_blob/"+id}
-const AF=[["born","জন্ম তারিখ"],["place","জন্মস্থান"],["father","পিতার নাম"],["mother","মাতার নাম"],["works","অবদান"],["books","গ্রন্থ"],["other","অন্যান্য"],["died","মৃত্যুসন"]];
+const AF=[["nick","ডাকনাম / ছদ্মনাম"],["born","জন্ম তারিখ"],["place","জন্মস্থান"],["father","পিতার নাম"],["mother","মাতার নাম"],["job","পেশা"],["genre","লেখার ধারা ও বিষয়"],["edu","পড়ালেখা"],["works","অবদান"],["awards","অর্জন ও সম্মাননা"],["books","গ্রন্থ"],["other","অন্যান্য"],["died","মৃত্যুসন"]];
 function aPic(a){return a.photo?h("img",{class:"ap",src:aSrc(a.photo),alt:a.name+"-এর ছবি",width:"150",height:"150",loading:"lazy",decoding:"async"}):h("div",{class:"ap",role:"img","aria-label":"ছবি নেই",text:[...(a.name||"?").trim()][0]})}
 function authorsHome(){$("authors-sec").hidden=!S.au.length||!isHome();$("alist").replaceChildren(...S.au.map(a=>h("a",{class:"ac",href:"#a-"+a.id,on:{click:e=>{e.preventDefault();go("a-"+a.id)}}},aPic(a),h("b",{text:a.name}))))}
 function authorPage(a){authorPage0(a);const b=authorBooks(a);if(b)$("authorv").append(b)}
-function authorPage0(a){$("authorv").replaceChildren(h("div",{style:"text-align:left"},h("a",{href:"#",class:"mini",text:"← হোম",on:{click:e=>{e.preventDefault();goHome()}}})),h("div",{class:"abox"},aPic(a),h("h1",{text:a.name,style:"font-family:'Hind Siliguri',sans-serif;font-weight:700;font-size:clamp(1.4rem,5vw,2rem);margin:10px 0 16px"}),h("div",{class:"agrid"},AF.filter(([k])=>a[k]).map(([k,l])=>pbox(l,h("p",{text:a[k]}),["works","books","other"].includes(k)?"wide":"")))))}
+function authorPage0(a){$("authorv").replaceChildren(h("div",{style:"text-align:left"},h("a",{href:"#",class:"mini",text:"← হোম",on:{click:e=>{e.preventDefault();goHome()}}})),h("div",{class:"abox"},aPic(a),h("h1",{text:a.name,style:"font-family:'Hind Siliguri',sans-serif;font-weight:700;font-size:clamp(1.4rem,5vw,2rem);margin:10px 0 16px"}),h("div",{class:"agrid"},AF.filter(([k])=>a[k]).map(([k,l])=>pbox(l,h("p",{text:a[k]}),["edu","works","awards","books","other"].includes(k)?"wide":"")))))}
 function wrapT(x,t,maxW,maxL){const L=[];let cur="";for(const w of t.split(/\s+/).filter(Boolean)){const test=cur?cur+" "+w:w;if(x.measureText(test).width>maxW&&cur){L.push(cur);cur=w}else cur=test}if(cur)L.push(cur);if(L.length>maxL){L.length=maxL;L[maxL-1]=L[maxL-1].replace(/\s*\S*$/,"")+"…"}return L}
 async function shareCard(r){const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");toast("কার্ড তৈরি হচ্ছে…");
   try{await document.fonts.load('700 40px "Hind Siliguri"');await document.fonts.load('400 40px "Tiro Bangla"')}catch(e){}
@@ -617,11 +627,11 @@ $("qz-pub").onclick=pubQuiz;$("qz-clr").onclick=()=>{buildQ();$("qz-msg").textCo
 const am=t=>$("a-msg").textContent=t;
 async function dropAuthPhoto(c){try{const as=await claude.use("assets");as&&await as.delete(c)}catch(e){}}
 function apv(){const p=$("a-prev"),u=S.aFile?URL.createObjectURL(S.aFile):S.aPhoto?aSrc(S.aPhoto):"";p.hidden=!u;if(u)p.src=u;$("a-rm").hidden=!u;$("a-pick").textContent=u?"ছবি পরিবর্তন করুন":"ছবি আপলোড করুন"}
-function arst(){S.aEdit=null;S.aPhoto="";S.aFile=null;["a-name","a-born","a-place","a-father","a-mother","a-works","a-books","a-other","a-died","a-img"].forEach(i=>$(i).value="");$("a-st").textContent="";$("a-h").textContent="নতুন লেখক পরিচিতি";apv()}
-function afill(a){S.aEdit=a.id;S.aPhoto=a.photo||"";S.aFile=null;$("a-h").textContent="লেখক সম্পাদনা";$("a-name").value=a.name||"";["born","place","father","mother","works","books","other","died"].forEach(k=>$("a-"+k).value=a[k]||"");apv();$("a-name").scrollIntoView();$("a-name").focus()}
-async function asave(){const g=i=>$(i).value.trim(),d={name:g("a-name"),born:g("a-born"),place:g("a-place"),father:g("a-father"),mother:g("a-mother"),works:g("a-works"),books:g("a-books"),other:g("a-other"),died:g("a-died"),photo:S.aPhoto};
+function arst(){S.aEdit=null;S.aPhoto="";S.aFile=null;["a-name","a-nick","a-born","a-place","a-father","a-mother","a-job","a-genre","a-edu","a-works","a-awards","a-books","a-other","a-died","a-img"].forEach(i=>$(i).value="");$("a-st").textContent="";$("a-h").textContent="নতুন লেখক পরিচিতি";apv()}
+function afill(a){S.aEdit=a.id;S.aPhoto=a.photo||"";S.aFile=null;$("a-h").textContent="লেখক সম্পাদনা";$("a-name").value=a.name||"";["nick","born","place","father","mother","job","genre","edu","works","awards","books","other","died"].forEach(k=>$("a-"+k).value=a[k]||"");apv();$("a-name").scrollIntoView();$("a-name").focus()}
+async function asave(){const g=i=>$(i).value.trim(),d={name:g("a-name"),nick:g("a-nick"),born:g("a-born"),place:g("a-place"),father:g("a-father"),mother:g("a-mother"),job:g("a-job"),genre:g("a-genre"),edu:g("a-edu"),works:g("a-works"),awards:g("a-awards"),books:g("a-books"),other:g("a-other"),died:g("a-died"),photo:S.aPhoto};
   if(!d.name||d.name.length>100){am("লেখকের নাম দিন (সর্বোচ্চ ১০০ অক্ষর)।");return}
-  if([d.born,d.place,d.father,d.mother,d.died].some(x=>x.length>150)||[d.works,d.books,d.other].some(x=>x.length>2000)){am("কোনো ঘরের লেখা সীমার বেশি বড়।");return}
+  if(d.nick.length>100||[d.born,d.place,d.father,d.mother,d.job,d.genre,d.died].some(x=>x.length>150)||[d.edu,d.works,d.awards,d.books,d.other].some(x=>x.length>2000)){am("কোনো ঘরের লেখা সীমার বেশি বড়।");return}
   const id=S.aEdit||"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),old=S.au.find(x=>x.id===id);d.at=old?old.at:Date.now();$("a-save").disabled=true;
   try{
     if(S.aFile){am("ছবি আপলোড হচ্ছে…");try{const as=await claude.use("assets");if(!as)throw{code:"not_granted"};let b=S.aFile;try{b=await shrink(S.aFile)}catch(e){}const u=await as.upload(b,{type:b.type});S.aPhoto=d.photo=u.id;S.aFile=null}catch(er){am("আপলোড ব্যর্থ: "+(UE[er&&er.code]||(er&&er.message)||"অজানা ত্রুটি")+" আপনার লেখা ও ছবি রাখা আছে, আবার চেষ্টা করুন।");return}}
@@ -720,6 +730,17 @@ function statOne(k,f){const e=$("st-"+k);if(!e||!SEEN)return;if(!f&&e._t===ST[k]
 const statAll=f=>["views","users","books"].forEach(k=>statOne(k,f));
 function statReset(){["views","users","books"].forEach(k=>{const e=$("st-"+k);if(e){cancelAnimationFrame(e._r);e._t=undefined;e._v=0;e.textContent="০+"}})}
 if("IntersectionObserver"in window){new IntersectionObserver(es=>{const on=es.some(x=>x.isIntersecting);if(on&&!SEEN){SEEN=true;statAll(true)}else if(!on&&SEEN){SEEN=false;statReset()}},{threshold:.4}).observe($("stats"))}else SEEN=true;
+const GROUPS=[["ইসলামিক বই",["ইসলামিক"]],["বাংলা সাহিত্যের বই",["গল্প","নাটক","উপন্যাস","কবিতা"]],["আত্মউন্নয়নমূলক বই",["আত্মউন্নয়ন"]],["ইতিহাস ও অন্যান্য বই",["ইতিহাস","অন্যান্য"]]];
+function cardEl(r){return h("div",{class:"card"},h("a",{class:"cl",href:"#b-"+r.id,on:{click:e=>{e.preventDefault();go("b-"+r.id)}}},cover(r),h("div",{class:"cb"},h("span",{class:"tag",text:r.cat}),h("h3",{text:r.title}),h("small",{text:au(r)}),rate(r))),h("div",{class:"sh"},shareBtn(r)))}
+const railIO="IntersectionObserver"in window?new IntersectionObserver(es=>es.forEach(e=>{const rl=e.target,was=rl._vis;rl._vis=e.isIntersecting;if(rl._vis&&!was&&!matchMedia("(prefers-reduced-motion:reduce)").matches)setTimeout(()=>stepEl(rl,true),400)}),{threshold:.5}):null;
+function stepEl(rl,force){if(!rl.isConnected||rl.offsetParent===null)return;if(!force&&(document.hidden||Date.now()<S.hold))return;const c=rl.firstElementChild;if(!c||rl.scrollWidth<=rl.clientWidth+4)return;
+  if(rl.scrollLeft+rl.clientWidth>=rl.scrollWidth-4)rl.scrollTo({left:0,behavior:"smooth"});else rl.scrollBy({left:c.offsetWidth+12,behavior:"smooth"})}
+function groupsRender(a){const known=GROUPS.flatMap(g=>g[1]);
+  $("groups").replaceChildren(...GROUPS.map(([t,cs],gi)=>{const L=a.filter(r=>cs.includes(r.cat)||(gi===GROUPS.length-1&&!known.includes(r.cat)));if(!L.length)return null;
+    const rail=h("div",{class:"rail grail"},L.slice(0,30).map(cardEl));if(railIO)railIO.observe(rail);else rail._vis=true;
+    ["mouseenter","focusin","touchstart","pointerdown"].forEach(ev=>rail.addEventListener(ev,()=>S.hold=Date.now()+8000,{passive:true}));
+    return h("section",{class:"gsec"},h("div",{class:"ghd"},h("h3",{text:t}),cs.length===1?h("button",{class:"mini",type:"button",text:"সব দেখুন ›",on:{click:()=>{S.cat=cs[0];S.n=10;paint();$("reviews").scrollIntoView()}}}):null),rail)}).filter(Boolean))}
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches)setInterval(()=>{if(document.hidden||$("home").hidden||Date.now()<S.hold)return;document.querySelectorAll(".grail").forEach(rl=>{if(rl._vis)stepEl(rl)})},3000);
 async function init(){paint();route();
   try{const user=await claude.use("user");let ed=false,em=null;try{ed=await user.canEdit()}catch(e){}try{em=(await user.me()).email}catch(e){}S.admin=ed&&(em?ADMINS.includes(em.toLowerCase()):true);if(user){try{S.me=await user.id()}catch(e){}}
     S.db=await claude.use("db");if(!S.db){paint();return}
